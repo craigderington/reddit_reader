@@ -3,6 +3,10 @@
 from flask import Flask
 from flask import render_template, redirect, url_for
 from flask_pymongo import PyMongo
+import os
+import requests
+import json
+import datetime
 
 app = Flask(__name__)
 mongo = PyMongo(app)
@@ -12,8 +16,12 @@ MONGO_DBNAME = "test"
 
 
 @app.route('/')
-def hello():
-    return "hello world"
+def index():
+    welcome_message = "Select a subreddit to view..."
+    return render_template(
+        'index.html',
+        welcome_message=welcome_message
+    )
 
 
 @app.route('/test')
@@ -35,14 +43,27 @@ def reddit():
 
 @app.route('/reddit/new')
 def reddit_new():
-    doc = {
-        'story': 'This is a new reddit story.',
-        'url': 'http://www.reddit.com/r/technology/'
-    }
+    url = 'http://www.reddit.com/r/technology/.json'
+    hdr = {'user-agent': 'r_superbot by gravity'}
+    r = requests.get(url, headers=hdr)
+    parsed = r.json()
+    for item in parsed['data']['children']:
+        structure = {
+            'id': item['data']['id'],
+            'subreddit': item['data']['subreddit'],
+            'title': item['data']['title'],
+            'link': item['data']['url'],
+            'name': item['data']['name'],
+            'likes': item['data']['likes'],
+            'domain': item['data']['domain'],
+            'created': datetime.datetime.fromtimestamp(item['data']['created'])
+        }
 
-    mongo.db.reddit.insert(doc)
+        mongo.db.reddit.insert(structure)
+
     return redirect(url_for('test'))
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
