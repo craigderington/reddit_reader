@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Public Reddit Stories
+{% endblock %}
+
+
+{% block body %}
+  <h2>Reddit Stories</h2>
+
+    {% for item in news_stories %}
+      <div class="well" style="margin-bottom:5px;">
+
+            <h5>{{ item.story }}</h5>
+            <a href="{{ item.link }}">{{ item.link }}</a>
+
+      </div>
+    {% endfor %}
+
+
+{% endblock %}

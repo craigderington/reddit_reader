@@ -1,0 +1,26 @@
+<!doctype html>
+<title>{% block title %}Welcome{% endblock %} | Reddit Stories</title>
+<link rel="stylesheet" type="text/css" href="#">
+<div class="page">
+  <h1>Reddit News</h1>
+  <div class="navigation">
+    <a href="#">My Reddit</a> |
+    <a href="#">Refresh Timeline</a> |
+    <a href="#">Log Out</a>
+  </div>
+  {% with flashes = get_flashed_messages() %}
+    {% if flashes %}
+      <ul class="flashes">
+      {% for message in flashes %}
+        <li>{{ message }}
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  <div class="body">
+  {% block body %}{% endblock %}
+  </div>
+  <div class="footer" style="margin-top:25px;border:0.5px solid #f2f2f2;">
+    Powered By <a href="#">MongoReddit</a>
+  </div>
+</div>
