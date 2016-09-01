@@ -1,18 +1,24 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Public Reddit Stories
+  Public Reddits | Timeline
 {% endblock %}
 
 
 {% block body %}
-  <h2>Reddit Stories</h2>
+  <h2><i class="fa fa-reddit-square"></i> Recent Reddits
+    <a style="margin-left:5px;" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-toggle-left"></i> Toggle Menu</a>
+    <span class="pull-right" style="font-size:14px;"><i class="fa fa-check-circle"></i> Currently Showing {{ news_stories.count() }} reddits</span>
+  </h2>
 
     {% for item in news_stories %}
-      <div class="well" style="margin-bottom:5px;">
+      <div class="well" style="margin-bottom:5px;margin-top:10px;">
 
-            <h5>{{ item.story }}</h5>
-            <a href="{{ item.link }}">{{ item.link }}</a>
+            <h4>{{ item.title }}</h4>
+            <h6><small>{{ item.created.strftime('%m-%d-%Y @ %H:%M:%S') }}</small>
+                <span class="pull-right"><strong>{{ item.subreddit }}</strong>&nbsp; <a href=""><i class="fa fa-times-circle"></i></a></span>
+            </h6>
+            <a href="{{ item.link }}" target="_blank">{{ item.link }}</a>
 
       </div>
     {% endfor %}

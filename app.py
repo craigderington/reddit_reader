@@ -12,7 +12,7 @@ app = Flask(__name__)
 mongo = PyMongo(app)
 
 MONGODB_URI = "mongodb://localhost/"
-MONGO_DBNAME = "test"
+MONGO_DBNAME = "app"
 
 
 @app.route('/')
@@ -21,6 +21,15 @@ def index():
     return render_template(
         'index.html',
         welcome_message=welcome_message
+    )
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    user = mongo.db.users.find()
+    return render_template(
+        'login.html',
+        user=user
     )
 
 
@@ -34,7 +43,7 @@ def test():
 
 @app.route('/reddit', methods=['GET'])
 def reddit():
-    news_stories = mongo.db.reddit.find()
+    news_stories = mongo.db.reddit.find().sort([('created', -1)])
     return render_template(
         'index.html',
         news_stories=news_stories
@@ -61,7 +70,7 @@ def reddit_new():
 
         mongo.db.reddit.insert(structure)
 
-    return redirect(url_for('test'))
+    return redirect(url_for('reddit'))
 
 
 if __name__ == '__main__':
