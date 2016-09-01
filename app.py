@@ -1,8 +1,9 @@
 #! /usr/bin/python
 
 from flask import Flask
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request, flash
 from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 import os
 import requests
 import json
@@ -13,6 +14,8 @@ mongo = PyMongo(app)
 
 MONGODB_URI = "mongodb://localhost/"
 MONGO_DBNAME = "app"
+
+app.secret_key = os.urandom(50)
 
 
 @app.route('/')
@@ -70,6 +73,14 @@ def reddit_new():
 
         mongo.db.reddit.insert(structure)
 
+    flash('The reddit database was successfully updated...')
+    return redirect(url_for('reddit'))
+
+
+@app.route('/reddit/delete/<reddit_id>', methods=['GET'])
+def reddit_delete(reddit_id):
+    result = mongo.db.reddit.delete_one({'_id': ObjectId(reddit_id)})
+    flash('The reddit article was successfully deleted...')
     return redirect(url_for('reddit'))
 
 

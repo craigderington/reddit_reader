@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Public Reddits | Timeline
+  Reddit Reader | Public Timeline
 {% endblock %}
 
 
@@ -12,15 +12,17 @@
   </h2>
 
     {% for item in news_stories %}
-      <div class="well" style="margin-bottom:5px;margin-top:10px;">
-
+        <div class="well" style="margin-bottom:5px;margin-top:10px;">
             <h4>{{ item.title }}</h4>
-            <h6><small>{{ item.created.strftime('%m-%d-%Y @ %H:%M:%S') }}</small>
-                <span class="pull-right"><strong>{{ item.subreddit }}</strong>&nbsp; <a href=""><i class="fa fa-times-circle"></i></a></span>
-            </h6>
-            <a href="{{ item.link }}" target="_blank">{{ item.link }}</a>
-
-      </div>
+                <h6><small>{{ item.created.strftime('%m-%d-%Y @ %H:%M:%S') }}</small>
+                    <span class="pull-right"><strong>{{ item.subreddit }}</strong>&nbsp;
+                        <a href="{{ url_for('reddit_delete', reddit_id=item._id) }}" onclick="return confirm('Are you sure you want to delete this story?');">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </span>
+                </h6>
+                <a href="{{ item.link }}" target="_blank">{{ item.link }}</a>
+        </div>
     {% endfor %}
 
 

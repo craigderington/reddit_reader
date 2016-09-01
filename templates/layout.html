@@ -37,7 +37,7 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="#">
+                    <a href="{{ url_for('reddit') }}">
                         <i class="fa fa-reddit"></i> Reddit Reader
                     </a>
                 </li>
@@ -87,11 +87,14 @@
                 {% with flashes = get_flashed_messages() %}
                     {% if flashes %}
                     <div class="row">
-                      <ul class="flashes">
-                      {% for message in flashes %}
-                        <li>{{ message }}
-                      {% endfor %}
-                      </ul>
+                        {% for message in flashes %}
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong><i class="fa fa-warning"></i> Notice</strong> {{ message }}
+                            </div>
+                        {% endfor %}
                     </div>
                     {% endif %}
                 {% endwith %}
