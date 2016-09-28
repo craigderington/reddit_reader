@@ -8,6 +8,7 @@ import os
 import requests
 import json
 import datetime
+import random
 
 app = Flask(__name__)
 mongo = PyMongo(app)
@@ -17,6 +18,16 @@ MONGO_DBNAME = "app"
 
 app.secret_key = os.urandom(50)
 
+subreddits = {
+    'Frontpage': 'frontpage',
+    'Explain Like Im 5': 'explainlikeimfive',
+    'LifeProTips': 'LPT',
+    'Data Is Beautiful': 'dataisbeautiful',
+    'Technology': 'technology',
+    'Mildly Interesting': 'mildlyinteresting',
+    'Today I Learned': 'todayilearned',
+    'Earth Porn': 'earthporn',
+}
 
 @app.route('/')
 def index():
@@ -49,13 +60,15 @@ def reddit():
     news_stories = mongo.db.reddit.find().sort([('created', -1)])
     return render_template(
         'index.html',
-        news_stories=news_stories
+        news_stories=news_stories,
+        reddits=subreddits
     )
 
 
 @app.route('/reddit/new')
 def reddit_new():
-    url = 'http://www.reddit.com/r/technology/.json'
+    subreddit = random.choice(subreddits.values())
+    url = 'http://www.reddit.com/r/' + str(subreddit) + '/.json'
     hdr = {'user-agent': 'r_superbot by gravity'}
     r = requests.get(url, headers=hdr)
     parsed = r.json()
@@ -73,7 +86,7 @@ def reddit_new():
 
         mongo.db.reddit.insert(structure)
 
-    flash('The reddit database was successfully updated...')
+    flash('The reddit database was successfully updated from /r/' + subreddit + '.')
     return redirect(url_for('reddit'))
 
 

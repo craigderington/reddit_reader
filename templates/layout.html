@@ -55,6 +55,11 @@
                     <a href="#">
                         <i class="fa fa-check"></i> Subreddits
                     </a>
+                        <ul style="list-style:none;">
+                            {% for reddit in reddits %}
+                            <li><a href="#"><i class="fa fa-angle-double-right"></i> {{ reddit }}</a></li>
+                            {% endfor %}
+                        </ul>
                 </li>
                 <li>
                     <a href="https://github.com/craigderington/reddit_reader" target="_blank">
@@ -77,6 +82,7 @@
                     </a>
                 </li>
             </ul>
+
         </div>
         <!-- /#sidebar-wrapper -->
 
