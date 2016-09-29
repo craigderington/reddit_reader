@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  My Reddit Reader | Subreddit Filter
+{% endblock %}
+
+{% block body %}
+
+    <h2><i class="fa fa-reddit-square"></i> {{ reddit_cat.title() }} Reddits
+        <a style="margin-left:5px;" href="#menu-toggle" class="btn btn-default" id="menu-toggle"><i class="fa fa-toggle-left"></i> Toggle Menu</a>
+        <span class="pull-right" style="font-size:14px;"><i class="fa fa-check-circle"></i> Currently Showing {{ filter_result.count() }} reddits</span>
+    </h2>
+
+    {% for item in filter_result %}
+        <div class="well" style="padding:10px;margin-bottom:5px;margin-top:10px;">
+            <h4>{{ item.title }}</h4>
+            <h5>subreddit:/r/{{ item.subreddit }} <span style="margin-left:10px;">domain: {{ item.domain }}</span>
+                <span class="pull-right">
+                    <a href="{{ url_for('reddit_delete', reddit_id=item._id) }}" onclick="return confirm('Are you sure you want to delete this story?');">
+                        <i class="fa fa-times-circle fa-3x"></i>
+                    </a>
+                </span>
+            </h5>
+                <h6><small>{{ item.created.strftime('%m-%d-%Y @ %H:%M:%S') }}</small></h6>
+                <a href="{{ item.link }}" target="_blank">{{ item.link }}</a>
+        </div>
+    {% endfor %}
+
+{% endblock %}

@@ -19,7 +19,7 @@ MONGO_DBNAME = "app"
 app.secret_key = os.urandom(50)
 
 subreddits = {
-    'Frontpage': 'frontpage',
+    'Frontpage': 'FrontPage',
     'Explain Like Im 5': 'explainlikeimfive',
     'LifeProTips': 'LPT',
     'Data Is Beautiful': 'dataisbeautiful',
@@ -88,6 +88,17 @@ def reddit_new():
 
     flash('The reddit database was successfully updated from /r/' + subreddit + '.')
     return redirect(url_for('reddit'))
+
+
+@app.route('/reddit/<subreddit>', methods=['GET'])
+def reddit_filter(subreddit):
+    filter_result = mongo.db.reddit.find({'subreddit': subreddit}).sort([('created', -1)])
+    return render_template(
+        'subreddit.html',
+        filter_result=filter_result,
+        reddits=subreddits,
+        reddit_cat=subreddit
+    )
 
 
 @app.route('/reddit/delete/<reddit_id>', methods=['GET'])
