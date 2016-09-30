@@ -26,7 +26,7 @@ subreddits = {
     'Technology': 'technology',
     'Mildly Interesting': 'mildlyinteresting',
     'Today I Learned': 'todayilearned',
-    'Earth Porn': 'earthporn',
+    'Earth Porn': 'EarthPorn',
 }
 
 @app.route('/')
