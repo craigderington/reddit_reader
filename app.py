@@ -32,6 +32,7 @@ subreddits = {
     'Science': 'science',
 }
 
+
 @app.route('/')
 def index():
     welcome_message = "Select a subreddit to view..."
@@ -72,28 +73,30 @@ def reddit():
 def reddit_new():
     subreddit = random.choice(subreddits.values())
     url = 'http://www.reddit.com/r/' + str(subreddit) + '/.json'
-    hdr = {'user-agent': 'r_superbot by gravity'}
+    hdr = {'user-agent': 'gravity'}
     r = requests.get(url, headers=hdr)
-    parsed = r.json()
-    for item in parsed['data']['children']:
-        structure = {
-            'id': item['data']['id'],
-            'subreddit': item['data']['subreddit'],
-            'title': item['data']['title'],
-            'link': item['data']['url'],
-            'name': item['data']['name'],
-            'likes': item['data']['likes'],
-            'domain': item['data']['domain'],
-            'created': datetime.datetime.fromtimestamp(item['data']['created'])
-        }
 
-        mongo.db.reddit.insert(structure)
+    if r.status_code == 200:
+        parsed = r.json()
+        for item in parsed['data']['children']:
+            structure = {
+                'id': item['data']['id'],
+                'subreddit': item['data']['subreddit'],
+                'title': item['data']['title'],
+                'link': item['data']['url'],
+                'name': item['data']['name'],
+                'likes': item['data']['likes'],
+                'domain': item['data']['domain'],
+                'created': datetime.datetime.fromtimestamp(item['data']['created'])
+            }
 
-    flash('The reddit database was successfully updated from /r/' + subreddit + '.')
-    return redirect(url_for('reddit'))
+            mongo.db.reddit.insert(structure)
+
+        flash('The reddit database was successfully updated from /r/' + subreddit + '.')
+        return redirect(url_for('reddit'))
 
 
-@app.route('/reddit/<subreddit>', methods=['GET'])
+@app.route('/reddit/<string:subreddit>', methods=['GET'])
 def reddit_filter(subreddit):
     filter_result = mongo.db.reddit.find({'subreddit': subreddit}).sort([('created', -1)])
     return render_template(
@@ -104,11 +107,17 @@ def reddit_filter(subreddit):
     )
 
 
-@app.route('/reddit/delete/<reddit_id>', methods=['GET'])
+@app.route('/reddit/delete/<string:reddit_id>', methods=['GET'])
 def reddit_delete(reddit_id):
-    result = mongo.db.reddit.delete_one({'_id': ObjectId(reddit_id)})
-    flash('The reddit article was successfully deleted...')
-    return redirect(url_for('reddit'))
+    reddit_story = mongo.db.reddit.find_one({'_id': ObjectId(reddit_id)})
+    if reddit_story:
+        try:
+            result = mongo.db.reddit.delete_one({'_id': ObjectId(reddit_id)})
+        except ValueError as e:
+            flash('The selected reddit article ID can not be found.', 'error')
+
+        flash('The reddit article was successfully deleted...', 'success')
+        return redirect(url_for('reddit'))
 
 
 if __name__ == '__main__':
