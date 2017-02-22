@@ -122,14 +122,14 @@ def reddit_delete(reddit_id):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    render_template(
+    return render_template(
         '404.html'
     ), 404
 
 
 @app.errorhandler(500)
 def server_error(e):
-    render_template(
+    return render_template(
         '500.html'
     ), 500
 
