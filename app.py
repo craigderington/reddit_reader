@@ -30,6 +30,7 @@ subreddits = {
     'Old School School': 'OldSchoolCool',
     'Space': 'space',
     'Science': 'science',
+    'Learn Python': 'learnpython',
 }
 
 
