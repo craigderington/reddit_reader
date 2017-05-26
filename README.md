@@ -5,6 +5,7 @@ Simple Reddit Reader using Flask and MongoDB.
 * MongoDB
 * PyMongo
 * Bootstrap
+* Javascript
 
 I love to read reddit.  I'm on the reddit website daily.  A majority of my news and information comes from reddit.
 But let's face it, their website looks awful.  Like a reddit'er threw up their sushi lunch all over it.
